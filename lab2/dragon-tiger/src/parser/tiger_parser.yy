@@ -109,7 +109,8 @@ using utils::nl;
 %left PLUS;
 %left UMINUS;
 %left TIMES DIVIDE;
-
+%left OR;
+%left AND;
 // Declare grammar rules and production actions
 
 %start program;

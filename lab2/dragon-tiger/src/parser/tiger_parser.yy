@@ -106,11 +106,12 @@ using utils::nl;
 // Declare precedence rules
 
 %nonassoc FUNCTION VAR TYPE DO OF ASSIGN;
-%left PLUS;
-%left UMINUS;
 %left OR;
-%left TIMES DIVIDE;
 %left AND;
+%left EQ, NEQ, LE, LT, GE, GT;
+%left PLUS, MINUS;
+%left TIMES DIVIDE;
+%left UMINUS;
 // Declare grammar rules and production actions
 
 %start program;

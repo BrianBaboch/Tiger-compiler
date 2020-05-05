@@ -46,15 +46,24 @@ int main(int argc, char **argv) {
   }
 
   if (vm.count("dump-ast")) {
-    ast::ASTDumper dumper(&std::cout, vm.count("verbose") > 0);
-    parser_driver.result_ast->accept(dumper);
-    dumper.nl();
+    if(vm.count("eval")) {
+	utils::error("Fatal Error");
+    }
+    else {
+      ast::ASTDumper dumper(&std::cout, vm.count("verbose") > 0);
+      parser_driver.result_ast->accept(dumper);
+      dumper.nl();
+    }
   }
 
   if (vm.count("eval")) {
-    ast::Evaluator eval;
-    std::cout << parser_driver.result_ast->accept(eval) << "\n";
-    return 1;
+    if(vm.count("dump-ast")) {
+	utils::error("Fatal Error");
+    }
+    else{
+      ast::Evaluator eval;
+      std::cout << parser_driver.result_ast->accept(eval) << "\n";
+    }
   }
   delete parser_driver.result_ast;
   return 0;

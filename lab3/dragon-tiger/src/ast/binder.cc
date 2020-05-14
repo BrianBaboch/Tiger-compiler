@@ -174,6 +174,9 @@ void Binder::visit(IfThenElse &ite) {
 }
 
 void Binder::visit(VarDecl &decl) {
+  if(!decl.get_expr()){
+    decl.get_expr()->accept(*this);
+  }
   enter(decl);
 }
 
@@ -186,7 +189,12 @@ void Binder::visit(FunDecl &decl) {
   for(size_t i = 0; i < parameters.size(); i++){
     parameters[i]->accept(*this);
   }
-  decl.get_expr()->accept(*this);
+  if(!decl.get_expr()){
+    decl.get_expr()->accept(*this);
+  }
+  else{
+    utils::error("Function not defined");
+  }
   pop_scope();
   functions.pop_back();
 }

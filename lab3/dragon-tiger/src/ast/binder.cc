@@ -137,8 +137,25 @@ void Binder::visit(Sequence &seq) {
 void Binder::visit(Let &let) {
   push_scope();
   std::vector<Decl *> dec = let.get_decls();
+  std::vector<FunDecl *> func;
   for(size_t i = 0; i < dec.size(); i++){
-    dec[i]->accept(*this);
+    if(dynamic_cast<FunDecl *>(dec[i])){
+      enter(* dec[i]);
+      func.push_back(dynamic_cast<FunDecl *>(dec[i]));
+    }
+    else{
+      while(func.size() > 0){
+        func[0]->accept(*this);
+	func.erase(func.begin());
+      }
+      dec[i]->accept(*this);
+    }
+  }
+  if(func.size() > 0){
+    while(func.size() > 0){
+      func[0]->accept(*this);
+      func.erase(func.begin());
+    }
   }
   let.get_sequence().accept(*this);
   pop_scope();
@@ -172,7 +189,16 @@ void Binder::visit(FunDecl &decl) {
 }
 
 void Binder::visit(FunCall &call) {
-  
+   if(dynamic_cast<FunDecl *>(&find(call.loc, call.func_name))){
+    call.set_decl(dynamic_cast<FunDecl *>(&find(call.loc, call.func_name)));
+    std::vector<Expr *> exp = call.get_args();
+    for(size_t i = 0; i < exp.size(); i++){
+      exp[i]->accept(*this);
+    }
+  }
+  else {
+    utils::error(call.loc, "Declaration is not a function");
+  } 
 }
 
 void Binder::visit(WhileLoop &loop) {

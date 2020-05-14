@@ -174,7 +174,7 @@ void Binder::visit(IfThenElse &ite) {
 }
 
 void Binder::visit(VarDecl &decl) {
-  if(!decl.get_expr()){
+  if(decl.get_expr()){
     decl.get_expr()->accept(*this);
   }
   enter(decl);
@@ -189,7 +189,7 @@ void Binder::visit(FunDecl &decl) {
   for(size_t i = 0; i < parameters.size(); i++){
     parameters[i]->accept(*this);
   }
-  if(!decl.get_expr()){
+  if(decl.get_expr()){
     decl.get_expr()->accept(*this);
   }
   else{

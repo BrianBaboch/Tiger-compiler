@@ -181,7 +181,6 @@ void Binder::visit(FunDecl &decl) {
   set_parent_and_external_name(decl);
   functions.push_back(&decl);
 
-  enter(decl);
   push_scope();
   decl.get_expr()->accept(*this);
   pop_scope();

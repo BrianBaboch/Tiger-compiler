@@ -182,6 +182,10 @@ void Binder::visit(FunDecl &decl) {
   functions.push_back(&decl);
 
   push_scope();
+  std::vector<VarDecl *> parameters = decl.get_params();
+  for(size_t i = 0; i < parameters.size(); i++){
+    parameters[i]->accept(*this);
+  }
   decl.get_expr()->accept(*this);
   pop_scope();
   functions.pop_back();

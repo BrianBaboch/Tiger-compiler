@@ -128,28 +128,51 @@ void Binder::visit(BinaryOperator &op) {
 }
 
 void Binder::visit(Sequence &seq) {
+  std::vector<Expr *> exp = seq.get_exprs();
+  for(size_t i = 0; i < exp.size(); i++){
+    exp[i]->accept(*this);
+  }
 }
 
 void Binder::visit(Let &let) {
+  push_scope();
+  std::vector<Decl *> dec = let.get_decls();
+  for(size_t i = 0; i < dec.size(); i++){
+    dec[i]->accept(*this);
+  }
+  let.get_sequence().accept(*this);
+  pop_scope();
 }
 
 void Binder::visit(Identifier &id) {
+  if(dynamic_cast<VarDecl *>(&find(id.loc, id.name))){
+    id.set_decl(dynamic_cast<VarDecl *>(&find(id.loc, id.name)));
+  }
+  else {
+    utils::error(id.loc, "Declaration is not a variable");
+  }
 }
 
 void Binder::visit(IfThenElse &ite) {
 }
 
 void Binder::visit(VarDecl &decl) {
+  enter(decl);
 }
 
 void Binder::visit(FunDecl &decl) {
   set_parent_and_external_name(decl);
   functions.push_back(&decl);
-  /* ... put your code here ... */
+
+  enter(decl);
+  push_scope();
+  decl.get_expr()->accept(*this);
+  pop_scope();
   functions.pop_back();
 }
 
 void Binder::visit(FunCall &call) {
+  
 }
 
 void Binder::visit(WhileLoop &loop) {

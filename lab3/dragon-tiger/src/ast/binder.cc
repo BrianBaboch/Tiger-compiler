@@ -150,9 +150,7 @@ void Binder::visit(Let &let) {
         func[0]->accept(*this);
 	func.erase(func.begin());
       }
-      if(dynamic_cast<Break *> (dec[i])){
-        utils::error("Breaks are not allowed inside Let");
-      }
+
       dec[i]->accept(*this);
     }
   }
@@ -162,7 +160,16 @@ void Binder::visit(Let &let) {
       func.erase(func.begin());
     }
   }
-  let.get_sequence().accept(*this);
+  //let.get_sequence().accept(*this);
+  std::vector<Expr *> exprs = let.get_sequence().get_exprs();
+  for(size_t i = 0; i < exprs.size(); i++) {
+    if(dynamic_cast<Break *> (exprs[i])) {
+      utils::error("Breaks are not allowed inside Let");
+    }   
+    else {
+      exprs[i]->accept(*this);
+    }
+  }
   pop_scope();
 }
 

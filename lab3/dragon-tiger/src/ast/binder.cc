@@ -147,11 +147,11 @@ void Binder::visit(Let &let) {
     }
     else{
       while(func.size() > 0){
-	if(dynamic_cast<Break *> (func[0])){
-	  utils::error("Breaks are not allowed inside Let");
-	}
         func[0]->accept(*this);
 	func.erase(func.begin());
+      }
+      if(dynamic_cast<Break *> (dec[i])){
+        utils::error("Breaks are not allowed inside Let");
       }
       dec[i]->accept(*this);
     }

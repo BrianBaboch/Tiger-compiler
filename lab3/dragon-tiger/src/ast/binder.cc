@@ -236,7 +236,6 @@ void Binder::visit(WhileLoop &loop) {
   current_depth = current_depth + 1;
   loop.get_condition().accept(*this);
   loop.get_body().accept(*this);
-
   current_depth = current_depth - 1;
   pop_scope();
 }
@@ -247,7 +246,6 @@ void Binder::visit(ForLoop &loop) {
   current_depth = current_depth + 1;
   loop.get_variable().accept(*this);
   loop.get_body().accept(*this);
-
   current_depth = current_depth - 1;
   pop_scope();
 }
@@ -256,10 +254,10 @@ void Binder::visit(Break &b) {
 }
 
 void Binder::visit(Assign &assign) {
+  (assign.get_rhs()).accept(*this);
   if(!((assign.get_lhs()).get_decl())->read_only){
     (assign.get_lhs()).accept(*this);
   }
-  (assign.get_rhs()).accept(*this);
 }
 
 } // namespace binder

@@ -255,8 +255,9 @@ void Binder::visit(Break &b) {
 
 void Binder::visit(Assign &assign) {
   (assign.get_rhs()).accept(*this);
-  if(!((assign.get_lhs()).get_decl())->read_only){
-    (assign.get_lhs()).accept(*this);
+  (assign.get_lhs()).accept(*this);
+  if(((assign.get_lhs()).get_decl())->read_only){
+    utils::error("This variable is not assignable");
   }
 }
 

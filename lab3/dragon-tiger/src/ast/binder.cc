@@ -167,7 +167,7 @@ void Binder::visit(Identifier &id) {
     id.set_decl(tmp);
     id.set_depth(current_depth);
     if(tmp->get_depth() != current_depth){
-	    tmp->set_escapes();
+      tmp->set_escapes();
     }
   }
   else {
@@ -227,9 +227,24 @@ void Binder::visit(FunCall &call) {
 }
 
 void Binder::visit(WhileLoop &loop) {
+  push_scope();
+  current_depth = current_depth + 1;
+  loop.get_condition().accept(*this);
+  loop.get_body().accept(*this);
+
+  current_depth = current_depth - 1;
+  pop_scope();
 }
 
 void Binder::visit(ForLoop &loop) {
+  loop.get_high().accept(*this);
+  push_scope();
+  current_depth = current_depth + 1;
+  loop.get_body().accept(*this);
+  loop.get_variable().accept(*this);
+
+  current_depth = current_depth - 1;
+  pop_scope();
 }
 
 void Binder::visit(Break &b) {

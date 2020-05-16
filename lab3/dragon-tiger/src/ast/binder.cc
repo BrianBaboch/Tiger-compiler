@@ -162,8 +162,13 @@ void Binder::visit(Let &let) {
 }
 
 void Binder::visit(Identifier &id) {
-  if(dynamic_cast<VarDecl *>(&find(id.loc, id.name))){
-    id.set_decl(dynamic_cast<VarDecl *>(&find(id.loc, id.name)));
+  VarDecl * tmp = dynamic_cast<VarDecl *>(&find(id.loc, id.name));
+  if(tmp) {
+    id.set_decl(tmp);
+    id.set_depth(current_depth);
+    if(tmp->get_depth() != current_depth){
+	    tmp->set_escapes();
+    }
   }
   else {
     utils::error(id.loc, "Declaration is not a variable");
@@ -174,6 +179,7 @@ void Binder::visit(IfThenElse &ite) {
 }
 
 void Binder::visit(VarDecl &decl) {
+  decl.set_depth(current_depth);
   if(decl.get_expr()){
     decl.get_expr()->accept(*this);
   }
@@ -185,6 +191,8 @@ void Binder::visit(FunDecl &decl) {
   functions.push_back(&decl);
 
   push_scope();
+  decl.set_depth(current_depth);
+  current_depth = current_depth + 1;
   std::vector<VarDecl *> parameters = decl.get_params();
   for(size_t i = 0; i < parameters.size(); i++){
     parameters[i]->accept(*this);
@@ -195,12 +203,14 @@ void Binder::visit(FunDecl &decl) {
   else{
     utils::error("Function not defined");
   }
+  current_depth = current_depth - 1;
   pop_scope();
   functions.pop_back();
 }
 
 void Binder::visit(FunCall &call) {
-   if(dynamic_cast<FunDecl *>(&find(call.loc, call.func_name))){
+  call.set_depth(current_depth);
+  if(dynamic_cast<FunDecl *>(&find(call.loc, call.func_name))){
     call.set_decl(dynamic_cast<FunDecl *>(&find(call.loc, call.func_name)));
     std::vector<Expr *> exp = call.get_args();
     for(size_t i = 0; i < exp.size(); i++){

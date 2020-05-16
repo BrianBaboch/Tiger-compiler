@@ -176,6 +176,9 @@ void Binder::visit(Identifier &id) {
 }
 
 void Binder::visit(IfThenElse &ite) {
+  (ite.get_condition()).accept(*this);
+  (ite.get_then_part()).accept(*this);
+  (ite.get_else_part()).accept(*this);
 }
 
 void Binder::visit(VarDecl &decl) {
@@ -240,8 +243,8 @@ void Binder::visit(ForLoop &loop) {
   loop.get_high().accept(*this);
   push_scope();
   current_depth = current_depth + 1;
-  loop.get_body().accept(*this);
   loop.get_variable().accept(*this);
+  loop.get_body().accept(*this);
 
   current_depth = current_depth - 1;
   pop_scope();
@@ -251,6 +254,8 @@ void Binder::visit(Break &b) {
 }
 
 void Binder::visit(Assign &assign) {
+  (assign.get_lhs()).accept(*this);
+  (assign.get_rhs()).accept(*this);
 }
 
 } // namespace binder

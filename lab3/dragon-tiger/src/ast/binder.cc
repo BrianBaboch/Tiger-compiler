@@ -125,6 +125,8 @@ void Binder::visit(StringLiteral &literal) {
 }
 
 void Binder::visit(BinaryOperator &op) {
+  op.get_left().accept(*this);
+  op.get_right().accept(*this);
 }
 
 void Binder::visit(Sequence &seq) {
@@ -254,7 +256,9 @@ void Binder::visit(Break &b) {
 }
 
 void Binder::visit(Assign &assign) {
-  (assign.get_lhs()).accept(*this);
+  if(!((assign.get_lhs()).get_decl())->read_only){
+    (assign.get_lhs()).accept(*this);
+  }
   (assign.get_rhs()).accept(*this);
 }
 

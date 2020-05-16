@@ -232,15 +232,18 @@ void Binder::visit(FunCall &call) {
 }
 
 void Binder::visit(WhileLoop &loop) {
+  visited_loops.push_back(&loop);
   push_scope();
   current_depth = current_depth + 1;
   loop.get_condition().accept(*this);
   loop.get_body().accept(*this);
   current_depth = current_depth - 1;
   pop_scope();
+  visited_loops.pop_back();
 }
 
 void Binder::visit(ForLoop &loop) {
+  visited_loops.push_back(&loop);
   loop.get_high().accept(*this);
   push_scope();
   current_depth = current_depth + 1;
@@ -248,9 +251,16 @@ void Binder::visit(ForLoop &loop) {
   loop.get_body().accept(*this);
   current_depth = current_depth - 1;
   pop_scope();
+  visited_loops.pop_back();
 }
 
-void Binder::visit(Break &b) {
+void Binder::visit(Break &b) { 
+  if(visited_loops.size() == 0) {
+    utils::error("There are no loops");
+  }
+  else {
+    b.set_loop(visited_loops.back());
+  }
 }
 
 void Binder::visit(Assign &assign) {

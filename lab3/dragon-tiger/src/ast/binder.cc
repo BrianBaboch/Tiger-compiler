@@ -204,6 +204,10 @@ void Binder::visit(FunDecl &decl) {
     utils::error("Function not defined");
   }
   current_depth = current_depth - 1;
+  std::vector<VarDecl *> escaping_decls = decl.get_escaping_decls();
+  for(size_t i = 0; i < escaping_decls.size(); i++){
+    escaping_decls[i]->accept(*this);
+  } 
   pop_scope();
   functions.pop_back();
 }

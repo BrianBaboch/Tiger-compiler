@@ -141,35 +141,33 @@ void Binder::visit(Let &let) {
   std::vector<Decl *> dec = let.get_decls();
   std::vector<FunDecl *> func;
   for(size_t i = 0; i < dec.size(); i++){
+    //Function Declaration
     if(dynamic_cast<FunDecl *>(dec[i])){
+      let_bloc = false;
       enter(* dec[i]);
       func.push_back(dynamic_cast<FunDecl *>(dec[i]));
     }
+    //Variable Declaration
     else{
+      //Accept all consecutive functions
       while(func.size() > 0){
         func[0]->accept(*this);
 	func.erase(func.begin());
       }
-
+      let_bloc = true;
+      //Accept Variable Declaration
       dec[i]->accept(*this);
     }
   }
+  let_bloc = false;
+  //Accept all consecutive functions if there were no VarDecls
   if(func.size() > 0){
     while(func.size() > 0){
       func[0]->accept(*this);
       func.erase(func.begin());
     }
   }
-  //let.get_sequence().accept(*this);
-  std::vector<Expr *> exprs = let.get_sequence().get_exprs();
-  for(size_t i = 0; i < exprs.size(); i++) {
-    if(dynamic_cast<Break *> (exprs[i])) {
-      utils::error("Breaks are not allowed inside Let");
-    }   
-    else {
-      exprs[i]->accept(*this);
-    }
-  }
+  let.get_sequence().accept(*this);
   pop_scope();
 }
 
@@ -208,6 +206,7 @@ void Binder::visit(FunDecl &decl) {
   push_scope();
   decl.set_depth(current_depth);
   current_depth = current_depth + 1;
+  //Accept all parameters
   std::vector<VarDecl *> parameters = decl.get_params();
   for(size_t i = 0; i < parameters.size(); i++){
     parameters[i]->accept(*this);
@@ -219,6 +218,7 @@ void Binder::visit(FunDecl &decl) {
     utils::error("Function not defined");
   }
   current_depth = current_depth - 1;
+  //Accept escaping declarations
   std::vector<VarDecl *> escaping_decls = decl.get_escaping_decls();
   for(size_t i = 0; i < escaping_decls.size(); i++){
     escaping_decls[i]->accept(*this);
@@ -269,7 +269,12 @@ void Binder::visit(Break &b) {
     utils::error("There are no loops");
   }
   else {
-    b.set_loop(visited_loops.back());
+    if(let_bloc) {
+      utils::error("Cannot have a break inside VarDecl");
+    }
+    else {
+      b.set_loop(visited_loops.back());
+    }
   }
 }
 

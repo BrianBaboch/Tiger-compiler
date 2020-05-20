@@ -98,10 +98,11 @@ void TypeChecker::visit(BinaryOperator &binOp) {
   if(binOp.get_left().get_type() != binOp.get_right().get_type()){
     utils::error(binOp.loc, "Different types in binary operation");
   }
-  else if(((binOp.get_left().get_type() == t_string) && (binOp.op == o_eq 
-		|| binOp.op == o_neq || binOp.op == o_lt || binOp.op == o_le 
-		|| binOp.op == o_gt || binOp.op == o_ge))
-	|| (binOp.get_left().get_type() == t_int)){
+  else if(binOp.op == o_eq || binOp.op == o_neq || binOp.op == o_lt 
+		|| binOp.op == o_le || binOp.op == o_gt || binOp.op == o_ge){
+    binOp.set_type(t_int);
+  }
+  else if(binOp.get_left().get_type() == t_int) {
     binOp.set_type(t_int);
   }
   else{
@@ -143,15 +144,19 @@ void TypeChecker::visit(ForLoop &loop) {
   loop.get_variable().accept(*this);
   loop.get_high().accept(*this);
   loop.get_body().accept(*this);
-  
-  if((loop.get_high().get_type()) == (loop.get_variable().get_type())
-		  && (loop.get_variable().get_type()) == t_int 
-		  && (loop.get_body().get_type() == t_void)) {
-    loop.set_type(t_void);
+
+  if(loop.get_high().get_type() != t_int) {
+    utils::error(loop.loc, "Type mismatch in loop high argument");
+  }
+  else if(loop.get_variable().get_type() != loop.get_high().get_type()) {
+    utils::error(loop.loc, "Type mismatch in loop variable");
+  }
+  else if(loop.get_body().get_type() != t_void) {
+    utils::error(loop.loc, "Type mismatch in loop body");
   }
   else {
-    utils::error(loop.loc, "Type mismatch in loop arguments");
-  }   
+    loop.set_type(t_void);
+  }
 }
 
 void TypeChecker::visit(Break &b) {
@@ -201,19 +206,6 @@ void TypeChecker::visit(FunDecl &decl) {
   if(decl.get_type() != decl.get_expr()->get_type()) {
     utils::error(decl.loc, "Type mismatch in function declaration");
   } 
-
-/*
-  if(!decl.type_name) { 
-    if(decl.get_expr()->get_type() != t_void) {
-      utils::error(decl.loc, "Type mismatch in function declaration");
-    }
-  }
-  else {
-    if(decl.get_type() != decl.get_expr()->get_type()) {
-      utils::error(decl.loc, "Type mismatch in function declaration");
-    }
-  }
-*/
 }
 
 void TypeChecker::visit(FunCall &call) {

@@ -51,45 +51,6 @@ void TypeChecker::visit(Let &let) {
   let.set_type(let.get_sequence().get_type());
 }
 
-/*
-void TypeChecker::visit(VarDecl &decl) {
-  Type exp_type = t_undef;
-  if(decl.get_expr()) {	  
-    decl.get_expr()->accept(*this);
-    exp_type = decl.get_expr()->get_type();
-  }
-  if(!decl.type_name) {
-    if(exp_type == t_void) {
-      utils::error(decl.loc, "Variable cannot have void type");
-    }
-    else {
-      if(exp_type != t_undef) {
-        decl.set_type(exp_type);
-      }
-    }
-  }
-  else {
-    if(decl.type_name.value().get() == "int") {
-      if(exp_type == t_int || exp_type == t_undef) {
-        decl.set_type(t_int);
-      }
-      else {
-        utils::error(decl.loc, "Type Mismatch");
-      }
-    }
-    if(decl.type_name.value().get() == "string") {
-      if(exp_type == t_string || exp_type == t_undef) {
-        decl.set_type(t_string);
-      }
-      else {
-        utils::error(decl.loc, "Type Mismatch");
-      }
-    }
-  }
-}
-*/
-
-
 void TypeChecker::visit(VarDecl &decl) {
   if(decl.get_expr()) {
     decl.get_expr()->accept(*this);
@@ -240,13 +201,14 @@ void TypeChecker::visit(FunDecl &decl) {
       return;
     }
   }
-  else {
-    decl.get_expr()->accept(*this);
-  }
 
   if(decl.is_external) {
     return;
   }
+  else {
+    decl.get_expr()->accept(*this);
+  }
+
   if(decl.get_type() != decl.get_expr()->get_type()) {
     utils::error(decl.loc, "Type mismatch in function declaration");
   } 

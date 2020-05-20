@@ -190,7 +190,7 @@ void TypeChecker::visit(FunCall &call) {
     utils::error(call.loc, "Incorrect number of arguments");
   }
   for(size_t i = 0; i < my_params.size(); i++) {
-    if(my_params[i]->get_expr()->get_type() != my_args[i]->get_type()) {
+    if(my_params[i]->get_type() != my_args[i]->get_type()) {
       utils::error(call.loc, "Arguments type mismatch");
     }
   }

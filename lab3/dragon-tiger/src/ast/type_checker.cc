@@ -143,6 +143,10 @@ void TypeChecker::visit(Break &b) {
 }
 
 void TypeChecker::visit(FunDecl &decl) {
+  if(decl.get_type() != t_undef) {
+    //declaration already visited
+    return;
+  }
   decl.get_expr()->accept(*this);
   for(size_t i = 0; i < decl.get_params().size(); i++) {
     decl.get_params()[i]->accept(*this);  
@@ -171,12 +175,14 @@ void TypeChecker::visit(FunDecl &decl) {
 }
 
 void TypeChecker::visit(FunCall &call) {
-  for(size_t i = 0; i < call.get_args().size(); i++) {
-    call.get_args()[i]->accept(*this);
-  }
   if(call.get_decl()->get_type() == t_undef) {
     call.get_decl()->accept(*this);
   }
+
+  for(size_t i = 0; i < call.get_args().size(); i++) {
+    call.get_args()[i]->accept(*this);
+  }
+
   std::vector<Expr *> my_args = call.get_args();
   std::vector<VarDecl *> my_params = call.get_decl()->get_params();
   

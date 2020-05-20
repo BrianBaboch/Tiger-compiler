@@ -52,14 +52,18 @@ void TypeChecker::visit(Let &let) {
 }
 
 void TypeChecker::visit(VarDecl &decl) {
-  if(!decl.get_expr()) {	  
+  bool emptyExpr = true;
+  if(decl.get_expr()) {	  
     decl.get_expr()->accept(*this);
+    emptyExpr = false;
   }
   if(!decl.type_name) {
     if(decl.get_expr()->get_type() == t_int 
-		    || decl.get_expr()->get_type() == t_string
-		    || decl.get_expr()->get_type() == t_undef) {
+		    || decl.get_expr()->get_type() == t_string) {
       decl.set_type(decl.get_expr()->get_type());
+    }
+    else if(emptyExpr) {
+      decl.set_type(t_undef);
     }
     else {
       utils::error(decl.loc, "Declaration type mismatch");

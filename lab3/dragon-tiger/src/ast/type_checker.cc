@@ -51,6 +51,7 @@ void TypeChecker::visit(Let &let) {
   let.set_type(let.get_sequence().get_type());
 }
 
+/*
 void TypeChecker::visit(VarDecl &decl) {
   Type exp_type = t_undef;
   if(decl.get_expr()) {	  
@@ -86,15 +87,22 @@ void TypeChecker::visit(VarDecl &decl) {
     }
   }
 }
+*/
 
 
-/*
-    if(decl.get_expr()->get_type() == t_int 
-		    || decl.get_expr()->get_type() == t_string) {
+void TypeChecker::visit(VarDecl &decl) {
+  if(decl.get_expr()) {
+    decl.get_expr()->accept(*this);
+  }
+  if(!decl.type_name) {
+    if(!decl.get_expr()) {
+      utils::error(decl.loc, "Undeclared variable type");
+    }
+    else if(decl.get_expr()->get_type() == t_int || decl.get_expr()->get_type() == t_string) {
       decl.set_type(decl.get_expr()->get_type());
     }
     else {
-      utils::error(decl.loc, "Declaration type mismatch");
+      utils::error(decl.loc, "Unknown variable type");
     }
   }
   else {
@@ -102,16 +110,16 @@ void TypeChecker::visit(VarDecl &decl) {
       if(decl.type_name.value().get() == "int") {
         decl.set_type(t_int);
       }
-      if(decl.type_name.value().get() == "string") {
+      else if(decl.type_name.value().get() == "string") {
         decl.set_type(t_string);
       }
       else {
-        utils::error(decl.loc, "Declaration type mismatch");
+        utils::error(decl.loc, "Unknown variable type");
       }
     }
     else {
       if(decl.type_name.value().get() == "int" 
-		      && (decl.get_expr()->get_type() == t_int)) {
+		      && decl.get_expr()->get_type() == t_int) {
         decl.set_type(t_int);
       }
       else if(decl.type_name.value().get() == "string" 
@@ -119,13 +127,11 @@ void TypeChecker::visit(VarDecl &decl) {
         decl.set_type(t_string);
       }
       else {
-        utils::error(decl.loc, "Declaration type mismatch");
+        utils::error(decl.loc, "Unknown variable type");
       }
-    } 
-  } 
+    }
+  }
 }
-
-*/
 
 void TypeChecker::visit(BinaryOperator &binOp) {
   binOp.get_left().accept(*this);

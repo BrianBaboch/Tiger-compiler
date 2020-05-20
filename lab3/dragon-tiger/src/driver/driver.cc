@@ -64,11 +64,11 @@ int main(int argc, char **argv) {
   }
   
   if (vm.count("type")) {
+    ast::type_checker::TypeChecker typer;
     if(main== nullptr){
       ast::binder::Binder binder;
       main = binder.analyze_program(*parser_driver.result_ast);
     }
-    ast::type_checker::TypeChecker typer;
     typer.visit(*main);
   }
   delete parser_driver.result_ast;

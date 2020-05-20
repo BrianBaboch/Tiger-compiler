@@ -54,11 +54,12 @@ void TypeChecker::visit(Let &let) {
 void TypeChecker::visit(VarDecl &decl) {
   decl.get_expr()->accept(*this);
   if(!decl.type_name) {
-    if(decl.get_expr()->get_type() == t_void) {
-      utils::error(decl.loc, "Declaration type cannot be void");
+    if(decl.get_expr()->get_type() == t_int 
+		    || decl.get_expr()->get_type() == t_string) {
+      decl.set_type(decl.get_expr()->get_type());
     }
     else {
-      decl.set_type(decl.get_expr()->get_type());
+      utils::error(decl.loc, "Declaration type mismatch");
     }
   }
   else {
@@ -71,7 +72,7 @@ void TypeChecker::visit(VarDecl &decl) {
       decl.set_type(t_string);
     }
     else {
-      utils::error(decl.loc, "Type mismatch");
+      utils::error(decl.loc, "Declaration type mismatch");
     }
   }
 }
@@ -168,10 +169,6 @@ void TypeChecker::visit(FunDecl &decl) {
 		    && decl.get_expr()->get_type() == t_string) {
       decl.set_type(t_string);
     }     
-    else if(decl.type_name.value().get() == "void" 
-		    && decl.get_expr()->get_type() == t_void) {
-      decl.set_type(t_void);
-    }
     else {
       utils::error(decl.loc, "Type mismatch");
     }

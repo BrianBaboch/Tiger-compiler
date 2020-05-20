@@ -206,14 +206,13 @@ void TypeChecker::visit(FunDecl &decl) {
 }
 
 void TypeChecker::visit(FunCall &call) {
-  if(call.get_decl()->get_type() == t_undef) {
-    call.get_decl()->accept(*this);
-  }
-
   for(size_t i = 0; i < call.get_args().size(); i++) {
     call.get_args()[i]->accept(*this);
   }
 
+  if(call.get_decl()->get_type() == t_undef) {
+    call.get_decl()->accept(*this);
+  }
   std::vector<Expr *> my_args = call.get_args();
   std::vector<VarDecl *> my_params = call.get_decl()->get_params();
   

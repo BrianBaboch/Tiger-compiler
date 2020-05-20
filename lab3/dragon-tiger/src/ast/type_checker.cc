@@ -52,10 +52,13 @@ void TypeChecker::visit(Let &let) {
 }
 
 void TypeChecker::visit(VarDecl &decl) {
-  decl.get_expr()->accept(*this);
+  if(!decl.get_expr()) {	  
+    decl.get_expr()->accept(*this);
+  }
   if(!decl.type_name) {
     if(decl.get_expr()->get_type() == t_int 
-		    || decl.get_expr()->get_type() == t_string) {
+		    || decl.get_expr()->get_type() == t_string
+		    || decl.get_expr()->get_type() == t_undef) {
       decl.set_type(decl.get_expr()->get_type());
     }
     else {

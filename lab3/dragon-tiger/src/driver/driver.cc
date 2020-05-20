@@ -4,6 +4,7 @@
 #include "../ast/ast_dumper.hh"
 #include "../ast/binder.hh"
 #include "../parser/parser_driver.hh"
+#include "../ast/type_checker.hh"
 #include "../utils/errors.hh"
 
 int main(int argc, char **argv) {
@@ -18,6 +19,7 @@ int main(int argc, char **argv) {
   ("trace-parser", "enable parser traces")
   ("trace-lexer", "enable lexer traces")
   ("verbose,v", "be verbose")
+  ("type,t", "type checker")
   ("input-file", po::value(&input_files), "input Tiger file");
 
   po::positional_options_description positional;
@@ -59,6 +61,15 @@ int main(int argc, char **argv) {
     else
       parser_driver.result_ast->accept(dumper);
     dumper.nl();
+  }
+  
+  if (vm.count("type")) {
+    if(main== nullptr){
+      ast::binder::Binder binder;
+      main = binder.analyze_program(*parser_driver.result_ast);
+    }
+    ast::type_checker::TypeChecker typer;
+    typer.visit(*main);
   }
   delete parser_driver.result_ast;
   return 0;

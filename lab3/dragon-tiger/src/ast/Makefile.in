@@ -111,7 +111,8 @@ am__v_AR_0 = @echo "  AR      " $@;
 am__v_AR_1 = 
 libast_a_AR = $(AR) $(ARFLAGS)
 libast_a_LIBADD =
-am_libast_a_OBJECTS = ast_dumper.$(OBJEXT) binder.$(OBJEXT)
+am_libast_a_OBJECTS = ast_dumper.$(OBJEXT) binder.$(OBJEXT) \
+	type_checker.$(OBJEXT)
 libast_a_OBJECTS = $(am_libast_a_OBJECTS)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
@@ -297,7 +298,7 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 noinst_LIBRARIES = libast.a
-libast_a_SOURCES = ast_dumper.cc binder.cc ast_dumper.hh binder.hh nodes.hh
+libast_a_SOURCES = ast_dumper.cc binder.cc ast_dumper.hh binder.hh type_checker.cc type_checker.hh nodes.hh
 AM_CXXFLAGS = -pedantic -Wall
 all: all-am
 
@@ -349,6 +350,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ast_dumper.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/binder.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/type_checker.Po@am__quote@
 
 .cc.o:
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\

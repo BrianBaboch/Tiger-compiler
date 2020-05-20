@@ -163,29 +163,42 @@ void TypeChecker::visit(FunDecl &decl) {
     //declaration already visited
     return;
   }
-  decl.get_expr()->accept(*this);
   for(size_t i = 0; i < decl.get_params().size(); i++) {
     decl.get_params()[i]->accept(*this);  
   }
-  if(!decl.type_name) { 
-    if(decl.get_expr()->get_type() != t_void) {
-      utils::error(decl.loc, "Type mismatch in function declaration");
+  
+  if(!decl.type_name) {
+    decl.set_type(t_void);
+  }
+  else{
+    if(decl.type_name.value().get() == "int") {
+      decl.set_type(t_int);
+    }
+    else if(decl.type_name.value().get() == "string") {
+      decl.set_type(t_string);
     }
     else {
-      decl.set_type(t_void);
+      utils::error(decl.loc, "Type mismatch in function declaration");
+    }
+  }
+
+  decl.get_expr()->accept(*this);
+
+  if(!decl.get_expr()) {
+    if(decl.get_type() != t_void) {
+      utils::error(decl.loc, "Type mismatch in function declaration");
     }
   }
   else {
-    if(decl.type_name.value().get() == "int" 
-		    && decl.get_expr()->get_type() == t_int) {
-      decl.set_type(t_int);
+    if(!decl.type_name) { 
+      if(decl.get_expr()->get_type() != t_void) {
+        utils::error(decl.loc, "Type mismatch in function declaration");
+      }
     }
-    else if(decl.type_name.value().get() == "string" 
-		    && decl.get_expr()->get_type() == t_string) {
-      decl.set_type(t_string);
-    }     
     else {
-      utils::error(decl.loc, "Type mismatch");
+      if(decl.get_type() != decl.get_expr()->get_type()) {
+        utils::error(decl.loc, "Type mismatch in function declaration");
+      }
     }
   }
 }

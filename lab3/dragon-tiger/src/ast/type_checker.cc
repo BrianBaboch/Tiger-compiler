@@ -92,7 +92,6 @@ void TypeChecker::visit(BinaryOperator &binOp) {
 }
 
 void TypeChecker::visit(Identifier &id) {
-  id.get_decl()->accept(*this);
   id.set_type(id.get_decl()->get_type());
 }
 

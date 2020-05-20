@@ -82,8 +82,10 @@ void TypeChecker::visit(BinaryOperator &binOp) {
   if(binOp.get_left().get_type() != binOp.get_right().get_type()){
     utils::error(binOp.loc, "Different types in binary operation");
   }
-  else if(((binOp.get_left().get_type() == t_string) && (binOp.op == o_eq))
-		 || (binOp.get_left().get_type() == t_int)){
+  else if(((binOp.get_left().get_type() == t_string) && (binOp.op == o_eq 
+		|| binOp.op == o_neq || binOp.op == o_lt || binOp.op == o_le 
+		|| binOp.op == o_gt || binOp.op == o_ge))
+	|| (binOp.get_left().get_type() == t_int)){
     binOp.set_type(t_int);
   }
   else{

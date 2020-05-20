@@ -182,6 +182,7 @@ void TypeChecker::visit(FunDecl &decl) {
     }
   }
 
+
   if(!decl.get_expr()) {
     if(decl.get_type() != t_void) {
       utils::error(decl.loc, "Type mismatch in function declaration");
@@ -189,18 +190,20 @@ void TypeChecker::visit(FunDecl &decl) {
   }
   else {
     decl.get_expr()->accept(*this);
-    if(decl.is_external) {
-      return;
+  }
+
+  if(decl.is_external) {
+    return;
+  }
+
+  if(!decl.type_name) { 
+    if(decl.get_expr()->get_type() != t_void) {
+      utils::error(decl.loc, "Type mismatch in function declaration");
     }
-    if(!decl.type_name) { 
-      if(decl.get_expr()->get_type() != t_void) {
-        utils::error(decl.loc, "Type mismatch in function declaration");
-      }
-    }
-    else {
-      if(decl.get_type() != decl.get_expr()->get_type()) {
-        utils::error(decl.loc, "Type mismatch in function declaration");
-      }
+  }
+  else {
+    if(decl.get_type() != decl.get_expr()->get_type()) {
+      utils::error(decl.loc, "Type mismatch in function declaration");
     }
   }
 }

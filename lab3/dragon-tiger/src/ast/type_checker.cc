@@ -193,12 +193,12 @@ void TypeChecker::visit(FunDecl &decl) {
   }
 
   if(!decl.get_expr()) {
-/*
+
     if(decl.is_external) {
       return;
     }
-*/
-    if(decl.get_type() != t_void) {
+
+    else if(decl.get_type() != t_void) {
       utils::error(decl.loc, "Type mismatch in function declaration");
     }
     else {

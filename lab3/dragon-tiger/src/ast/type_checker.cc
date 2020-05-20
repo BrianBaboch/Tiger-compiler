@@ -82,12 +82,13 @@ void TypeChecker::visit(BinaryOperator &binOp) {
   if(binOp.get_left().get_type() != binOp.get_right().get_type()){
     utils::error(binOp.loc, "Different types in binary operation");
   }
-  else if ((binOp.get_left().get_type() == t_string) && (binOp.op != o_eq)) {
-    utils::error(binOp.loc, "Cannot use this operator on strings");
-  }
-  else {
+  else if(((binOp.get_left().get_type() == t_string) && (binOp.op == o_eq))
+		 || (binOp.get_left().get_type() == t_int)){
     binOp.set_type(t_int);
-  }  
+  }
+  else{
+    utils::error(binOp.loc, "Type mismatch on binary operation"); 
+  }
 }
 
 void TypeChecker::visit(Identifier &id) {

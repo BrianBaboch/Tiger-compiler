@@ -167,6 +167,10 @@ void TypeChecker::visit(FunDecl &decl) {
     else if(decl.type_name.value().get() == "string" 
 		    && decl.get_expr()->get_type() == t_string) {
       decl.set_type(t_string);
+    }     
+    else if(decl.type_name.value().get() == "void" 
+		    && decl.get_expr()->get_type() == t_void) {
+      decl.set_type(t_void);
     }
     else {
       utils::error(decl.loc, "Type mismatch");

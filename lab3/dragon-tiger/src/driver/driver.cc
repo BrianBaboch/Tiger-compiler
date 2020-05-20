@@ -7,6 +7,7 @@
 #include "../ast/type_checker.hh"
 #include "../utils/errors.hh"
 
+
 int main(int argc, char **argv) {
   std::string output_file;
   std::vector<std::string> input_files;
@@ -19,7 +20,7 @@ int main(int argc, char **argv) {
   ("trace-parser", "enable parser traces")
   ("trace-lexer", "enable lexer traces")
   ("verbose,v", "be verbose")
-  ("type,t", "type checker")
+  ("type,t", "run the type checker on the parsed AST")
   ("input-file", po::value(&input_files), "input Tiger file");
 
   po::positional_options_description positional;
@@ -54,6 +55,15 @@ int main(int argc, char **argv) {
     main = binder.analyze_program(*parser_driver.result_ast);
   }
 
+  if (vm.count("type")) {
+    ast::type_checker::TypeChecker typer;
+    if(!main){
+      ast::binder::Binder binder;
+      main = binder.analyze_program(*parser_driver.result_ast);
+    }
+    typer.visit(*main);
+  }
+
   if (vm.count("dump-ast")) {
     ast::ASTDumper dumper(&std::cout, vm.count("verbose") > 0);
     if (main)
@@ -63,14 +73,6 @@ int main(int argc, char **argv) {
     dumper.nl();
   }
   
-  if (vm.count("type")) {
-    ast::type_checker::TypeChecker typer;
-    if(main== nullptr){
-      ast::binder::Binder binder;
-      main = binder.analyze_program(*parser_driver.result_ast);
-    }
-    typer.visit(*main);
-  }
   delete parser_driver.result_ast;
   return 0;
 }

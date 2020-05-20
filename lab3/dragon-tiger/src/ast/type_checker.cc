@@ -43,11 +43,11 @@ void TypeChecker::visit(IfThenElse &ite) {
 }
 
 void TypeChecker::visit(Let &let) {
-  let.get_sequence().accept(*this);
   //accept decls
   for(size_t i = 0; i < let.get_decls().size(); i++) {
     let.get_decls()[i]->accept(*this);
   }
+  let.get_sequence().accept(*this);
   let.set_type(let.get_sequence().get_type());
 }
 

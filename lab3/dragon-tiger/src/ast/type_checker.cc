@@ -70,18 +70,31 @@ void TypeChecker::visit(VarDecl &decl) {
     }
   }
   else {
-    if(decl.type_name.value().get() == "int" 
-		    && decl.get_expr()->get_type() == t_int) {
-      decl.set_type(t_int);
-    }
-    else if(decl.type_name.value().get() == "string" 
-		    && decl.get_expr()->get_type() == t_string) {
-      decl.set_type(t_string);
+    if(!decl.get_expr()) {
+      if(decl.type_name.value().get() == "int") {
+        decl.set_type(t_int);
+      }
+      if(decl.type_name.value().get() == "string") {
+        decl.set_type(t_string);
+      }
+      else {
+        utils::error(decl.loc, "Declaration type mismatch");
+      }
     }
     else {
-      utils::error(decl.loc, "Declaration type mismatch");
-    }
-  }
+      if(decl.type_name.value().get() == "int" 
+		      && (decl.get_expr()->get_type() == t_int)) {
+        decl.set_type(t_int);
+      }
+      else if(decl.type_name.value().get() == "string" 
+		      && decl.get_expr()->get_type() == t_string) {
+        decl.set_type(t_string);
+      }
+      else {
+        utils::error(decl.loc, "Declaration type mismatch");
+      }
+    } 
+  } 
 }
 
 void TypeChecker::visit(BinaryOperator &binOp) {

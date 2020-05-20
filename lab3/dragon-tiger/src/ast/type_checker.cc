@@ -184,7 +184,7 @@ void TypeChecker::visit(FunDecl &decl) {
 
   decl.get_expr()->accept(*this);
 
-  if(decl.is_external) {
+  if(!decl.is_external) {
     return;
   }
 

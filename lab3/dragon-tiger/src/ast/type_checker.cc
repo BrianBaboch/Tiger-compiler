@@ -59,7 +59,9 @@ void TypeChecker::visit(VarDecl &decl) {
     if(!decl.get_expr()) {
       utils::error(decl.loc, "Undeclared variable type");
     }
-    else if(decl.get_expr()->get_type() == t_int || decl.get_expr()->get_type() == t_string) {
+    else if(decl.get_expr()->get_type() == t_int 
+		    || decl.get_expr()->get_type() == t_string
+		    || decl.get_expr()->get_type() == t_void) {
       decl.set_type(decl.get_expr()->get_type());
     }
     else {
@@ -100,9 +102,11 @@ void TypeChecker::visit(BinaryOperator &binOp) {
   if(binOp.get_left().get_type() != binOp.get_right().get_type()){
     utils::error(binOp.loc, "Different types in binary operation");
   }
+  /*
   else if(binOp.get_left().get_type() == t_void) {
     utils::error(binOp.loc, "Cannot compare void in binary operation");
   }
+  */
   else if(binOp.op == o_eq || binOp.op == o_neq || binOp.op == o_lt 
 		|| binOp.op == o_le || binOp.op == o_gt || binOp.op == o_ge){
     binOp.set_type(t_int);

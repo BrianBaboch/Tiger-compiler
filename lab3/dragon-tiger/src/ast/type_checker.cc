@@ -102,15 +102,17 @@ void TypeChecker::visit(BinaryOperator &binOp) {
   if(binOp.get_left().get_type() != binOp.get_right().get_type()){
     utils::error(binOp.loc, "Different types in binary operation");
   }
-  /*
-  else if(binOp.get_left().get_type() == t_void) {
-    utils::error(binOp.loc, "Cannot compare void in binary operation");
-  }
-  */
-  else if(binOp.op == o_eq || binOp.op == o_neq || binOp.op == o_lt 
-		|| binOp.op == o_le || binOp.op == o_gt || binOp.op == o_ge){
+
+  //This part works for void, string and int
+  else if(binOp.op == o_eq || binOp.op == o_lt || binOp.op == o_gt) {
     binOp.set_type(t_int);
   }
+  //This part works for sting and int
+  else if((binOp.op == o_neq || binOp.op == o_le || binOp.op == o_ge)
+		  && (binOp.get_left().get_type() != t_void)){
+    binOp.set_type(t_int);
+  }
+  //This part only works for int
   else if(binOp.get_left().get_type() == t_int) {
     binOp.set_type(t_int);
   }

@@ -104,12 +104,12 @@ void TypeChecker::visit(BinaryOperator &binOp) {
   }
 
   //This part works for void, string and int
-  else if(binOp.op == o_eq || binOp.op == o_lt || binOp.op == o_gt) {
+  else if(binOp.op == o_eq || binOp.op == o_neq) {
     binOp.set_type(t_int);
   }
   //This part works for sting and int
-  else if((binOp.op == o_neq || binOp.op == o_le || binOp.op == o_ge)
-		  && (binOp.get_left().get_type() != t_void)){
+  else if((binOp.op == o_lt || binOp.op == o_le || binOp.op == o_gt 
+	    || binOp.op == o_ge) && (binOp.get_left().get_type() != t_void)){
     binOp.set_type(t_int);
   }
   //This part only works for int

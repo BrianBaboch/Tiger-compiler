@@ -91,7 +91,8 @@ llvm::Value *IRGenerator::visit(const Let &let) {
 }
 
 llvm::Value *IRGenerator::visit(const Identifier &id) {
-  UNIMPLEMENTED();
+  llvm::Value * varPtr = address_of(id); 
+  return (Builder.CreateLoad(varPtr));
 }
 
 llvm::Value *IRGenerator::visit(const IfThenElse &ite) {
@@ -99,7 +100,12 @@ llvm::Value *IRGenerator::visit(const IfThenElse &ite) {
 }
 
 llvm::Value *IRGenerator::visit(const VarDecl &decl) {
-  UNIMPLEMENTED();
+  llvm::Value * varValue = decl.get_expr()->accept(*this);
+  llvm::Type * varType = llvm_type(decl.get_type());
+  llvm::Value * varPtr = alloca_in_entry(varType, decl.name);
+  allocations[&decl] = varPtr;
+  Builder.CreateStore(varValue , varPtr);
+  return varPtr;
 }
 
 llvm::Value *IRGenerator::visit(const FunDecl &decl) {

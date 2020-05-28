@@ -209,10 +209,10 @@ llvm::Value *IRGenerator::visit(const WhileLoop &loop) {
       llvm::BasicBlock::Create(Context, "loop_body", current_function);
   llvm::BasicBlock *const end_block =
       llvm::BasicBlock::Create(Context, "loop_end", current_function);
-  llvm::Value *const cond = loop.get_condition().accept(*this);
   Builder.CreateBr(test_block);
 
   Builder.SetInsertPoint(test_block);
+  llvm::Value *const cond = loop.get_condition().accept(*this);
   Builder.CreateCondBr(Builder.CreateIsNotNull(cond),
                        body_block, end_block);
 

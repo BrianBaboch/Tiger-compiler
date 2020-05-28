@@ -99,11 +99,8 @@ llvm::Value *IRGenerator::visit(const Identifier &id) {
 }
 
 llvm::Value *IRGenerator::visit(const IfThenElse &ite) {
-  if(ite.get_type() == t_void) {
-    return nullptr;
-  }
-  llvm::Value * const result = 
-	  alloca_in_entry(llvm_type(ite.get_type()), "if result");
+  llvm::Value * result = nullptr; 
+
   //We create three empty basic blocks
   llvm::BasicBlock *const then_block =
 	  llvm::BasicBlock::Create(Context, "if_then", current_function);
@@ -113,20 +110,30 @@ llvm::Value *IRGenerator::visit(const IfThenElse &ite) {
 	  llvm::BasicBlock::Create(Context, "if_end", current_function);
 
   Builder.CreateCondBr(
-		  Builder.CreateICmpNE(ite.get_condition().accept(*this), 0), 
+		  Builder.CreateIsNotNull(ite.get_condition().accept(*this)),
 		  then_block, else_block);
 
   Builder.SetInsertPoint(then_block);
   llvm::Value *const then_result =
 	  ite.get_then_part().accept(*this);
-  Builder.CreateStore(then_result, result);
   Builder.CreateBr(end_block);
 
   Builder.SetInsertPoint(else_block);
   llvm::Value *const else_result =
 	  ite.get_else_part().accept(*this);
-  Builder.CreateStore(else_result, result);
   Builder.CreateBr(end_block);
+
+  if(ite.get_type() == t_void) {
+    return nullptr;
+  }
+
+  result = alloca_in_entry(llvm_type(ite.get_type()), "if result");
+  if(ite.get_condition().accept(*this)) {
+    Builder.CreateStore(then_result, result);
+  }
+  else {
+    Builder.CreateStore(else_result, result);
+  }
 
   Builder.SetInsertPoint(end_block);
   return Builder.CreateLoad(result);

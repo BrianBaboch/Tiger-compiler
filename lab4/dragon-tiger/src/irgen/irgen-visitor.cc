@@ -99,11 +99,11 @@ llvm::Value *IRGenerator::visit(const Identifier &id) {
 }
 
 llvm::Value *IRGenerator::visit(const IfThenElse &ite) {
-  llvm::Value * const result = 
-	  alloca_in_entry(llvm_type(ite.get_type()), "if result");
   if(ite.get_type() == t_void) {
     return nullptr;
   }
+  llvm::Value * const result = 
+	  alloca_in_entry(llvm_type(ite.get_type()), "if result");
   //We create three empty basic blocks
   llvm::BasicBlock *const then_block =
 	  llvm::BasicBlock::Create(Context, "if_then", current_function);
@@ -113,7 +113,7 @@ llvm::Value *IRGenerator::visit(const IfThenElse &ite) {
 	  llvm::BasicBlock::Create(Context, "if_end", current_function);
 
   Builder.CreateCondBr(
-		  Builder.CreateIsNotNull(ite.get_condition().accept(*this)), 
+		  Builder.CreateICmpNE(ite.get_condition().accept(*this), 0), 
 		  then_block, else_block);
 
   Builder.SetInsertPoint(then_block);

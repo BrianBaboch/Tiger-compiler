@@ -192,12 +192,12 @@ llvm::Value *IRGenerator::visit(const ForLoop &loop) {
 }
 
 llvm::Value *IRGenerator::visit(const Assign &assign) {
+  assign.get_lhs().accept(*this);
   //test if assign type is void
   if(assign.get_type() == t_void) {
     return nullptr;
   }
   llvm::Value * varValue = assign.get_rhs().accept(*this);
-  assign.get_lhs().accept(*this);
   llvm::Value * varPtr = address_of(assign.get_lhs()); 
   Builder.CreateStore(varPtr, varValue);
   return varPtr;

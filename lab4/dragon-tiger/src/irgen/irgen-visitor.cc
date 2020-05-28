@@ -203,7 +203,6 @@ llvm::Value *IRGenerator::visit(const FunCall &call) {
 }
 
 llvm::Value *IRGenerator::visit(const WhileLoop &loop) {
-/*
   llvm::BasicBlock *const test_block =
       llvm::BasicBlock::Create(Context, "loop_test", current_function);
   llvm::BasicBlock *const body_block =
@@ -214,19 +213,15 @@ llvm::Value *IRGenerator::visit(const WhileLoop &loop) {
   Builder.CreateBr(test_block);
 
   Builder.SetInsertPoint(test_block);
-  Builder.CreateCondBr(Builder.CreateICmpSLE(Builder.CreateLoad(index), high),
+  Builder.CreateCondBr(Builder.CreateIsNotNull(cond),
                        body_block, end_block);
 
   Builder.SetInsertPoint(body_block);
   loop.get_body().accept(*this);
-  Builder.CreateStore(
-      Builder.CreateAdd(Builder.CreateLoad(index), Builder.getInt32(1)), index);
   Builder.CreateBr(test_block);
 
   Builder.SetInsertPoint(end_block);
   return nullptr;
-*/
-  UNIMPLEMENTED();
 }
 
 llvm::Value *IRGenerator::visit(const ForLoop &loop) {

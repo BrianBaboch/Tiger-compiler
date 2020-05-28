@@ -91,6 +91,9 @@ llvm::Value *IRGenerator::visit(const Let &let) {
 }
 
 llvm::Value *IRGenerator::visit(const Identifier &id) {
+  if(id.get_type() == t_void) {
+    return nullptr;
+  }
   llvm::Value * varPtr = address_of(id); 
   return (Builder.CreateLoad(varPtr));
 }
@@ -192,11 +195,11 @@ llvm::Value *IRGenerator::visit(const ForLoop &loop) {
 
 llvm::Value *IRGenerator::visit(const Assign &assign) {
   llvm::Value * assignValue = assign.get_rhs().accept(*this);
+  assign.get_lhs().accept(*this);
   //test if assign type is void
   if(assign.get_rhs().get_type() == t_void) {
     return nullptr;
   }
-  assign.get_lhs().accept(*this);
   llvm::Value * assignPtr = address_of(assign.get_lhs()); 
   Builder.CreateStore(assignValue, assignPtr);
   return assignPtr;

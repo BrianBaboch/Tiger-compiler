@@ -123,6 +123,7 @@ llvm::Value *IRGenerator::visit(const IfThenElse &ite) {
 	  ite.get_else_part().accept(*this);
   Builder.CreateBr(end_block);
 
+  Builder.SetInsertPoint(end_block);
   if(ite.get_type() == t_void) {
     return nullptr;
   }
@@ -135,7 +136,6 @@ llvm::Value *IRGenerator::visit(const IfThenElse &ite) {
     Builder.CreateStore(else_result, result);
   }
 
-  Builder.SetInsertPoint(end_block);
   return Builder.CreateLoad(result);
 }
 

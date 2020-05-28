@@ -194,7 +194,7 @@ llvm::Value *IRGenerator::visit(const ForLoop &loop) {
 llvm::Value *IRGenerator::visit(const Assign &assign) {
   llvm::Value * varValue = assign.get_rhs().accept(*this);
   //test if assign type is void
-  if(assign.get_rhs().get_type() == t_void) {
+  if(assign.get_lhs().get_type() == t_void) {
     return nullptr;
   }
   assign.get_lhs().accept(*this);

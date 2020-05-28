@@ -100,8 +100,10 @@ llvm::Value *IRGenerator::visit(const Identifier &id) {
 
 llvm::Value *IRGenerator::visit(const IfThenElse &ite) {
   llvm::Value * result = nullptr; 
-  bool cond;
-
+  bool cond = ite.get_type() == t_void;
+  if(!cond) {
+    result = alloca_in_entry(llvm_type(ite.get_type()), "if result");
+  }
   //We create three empty basic blocks
   llvm::BasicBlock *const then_block =
 	  llvm::BasicBlock::Create(Context, "if_then", current_function);
@@ -117,27 +119,24 @@ llvm::Value *IRGenerator::visit(const IfThenElse &ite) {
   Builder.SetInsertPoint(then_block);
   llvm::Value *const then_result =
 	  ite.get_then_part().accept(*this);
-  cond = true;
+  if(!cond) {
+    Builder.CreateStore(then_result, result);
+  }
   Builder.CreateBr(end_block);
 
   Builder.SetInsertPoint(else_block);
   llvm::Value *const else_result =
 	  ite.get_else_part().accept(*this);
-  cond = false;
+  if(!cond){
+    Builder.CreateStore(else_result, result);
+  }
   Builder.CreateBr(end_block);
 
   Builder.SetInsertPoint(end_block);
-  if(ite.get_type() == t_void) {
+  if(cond) {
     return nullptr;
   }
 
-  result = alloca_in_entry(llvm_type(ite.get_type()), "if result");
-  if(cond) {
-    Builder.CreateStore(then_result, result);
-  }
-  else {
-    Builder.CreateStore(else_result, result);
-  }
   return Builder.CreateLoad(result);
 }
 
@@ -204,6 +203,29 @@ llvm::Value *IRGenerator::visit(const FunCall &call) {
 }
 
 llvm::Value *IRGenerator::visit(const WhileLoop &loop) {
+/*
+  llvm::BasicBlock *const test_block =
+      llvm::BasicBlock::Create(Context, "loop_test", current_function);
+  llvm::BasicBlock *const body_block =
+      llvm::BasicBlock::Create(Context, "loop_body", current_function);
+  llvm::BasicBlock *const end_block =
+      llvm::BasicBlock::Create(Context, "loop_end", current_function);
+  llvm::Value *const cond = loop.get_condition().accept(*this);
+  Builder.CreateBr(test_block);
+
+  Builder.SetInsertPoint(test_block);
+  Builder.CreateCondBr(Builder.CreateICmpSLE(Builder.CreateLoad(index), high),
+                       body_block, end_block);
+
+  Builder.SetInsertPoint(body_block);
+  loop.get_body().accept(*this);
+  Builder.CreateStore(
+      Builder.CreateAdd(Builder.CreateLoad(index), Builder.getInt32(1)), index);
+  Builder.CreateBr(test_block);
+
+  Builder.SetInsertPoint(end_block);
+  return nullptr;
+*/
   UNIMPLEMENTED();
 }
 

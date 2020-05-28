@@ -109,8 +109,9 @@ llvm::Value *IRGenerator::visit(const IfThenElse &ite) {
   llvm::BasicBlock *const end_block =
 	  llvm::BasicBlock::Create(Context, "if_end", current_function);
 
+  llvm::Value* cond = ite.get_condition().accept(*this);
   Builder.CreateCondBr(
-		  Builder.CreateIsNotNull(ite.get_condition().accept(*this)),
+		  Builder.CreateIsNotNull(cond),
 		  then_block, else_block);
 
   Builder.SetInsertPoint(then_block);
@@ -129,13 +130,12 @@ llvm::Value *IRGenerator::visit(const IfThenElse &ite) {
   }
 
   result = alloca_in_entry(llvm_type(ite.get_type()), "if result");
-  if(ite.get_condition().accept(*this)) {
+  if(cond) {
     Builder.CreateStore(then_result, result);
   }
   else {
     Builder.CreateStore(else_result, result);
   }
-
   return Builder.CreateLoad(result);
 }
 

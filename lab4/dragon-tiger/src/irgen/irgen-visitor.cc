@@ -100,12 +100,12 @@ llvm::Value *IRGenerator::visit(const IfThenElse &ite) {
 }
 
 llvm::Value *IRGenerator::visit(const VarDecl &decl) {
+  llvm::Value * varValue = decl.get_expr()->accept(*this);
   // test if the decl is of type void
   if(decl.get_type() == t_void) {
     decl.get_expr()->accept(*this);
     return nullptr;
   }
-  llvm::Value * varValue = decl.get_expr()->accept(*this);
   llvm::Type * varType = llvm_type(decl.get_type());
   llvm::Value * varPtr = alloca_in_entry(varType, decl.name);
   allocations[&decl] = varPtr;

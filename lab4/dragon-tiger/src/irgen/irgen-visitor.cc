@@ -103,7 +103,6 @@ llvm::Value *IRGenerator::visit(const VarDecl &decl) {
   llvm::Value * varValue = decl.get_expr()->accept(*this);
   // test if the decl is of type void
   if(decl.get_type() == t_void) {
-    decl.get_expr()->accept(*this);
     return nullptr;
   }
   llvm::Type * varType = llvm_type(decl.get_type());
@@ -194,12 +193,15 @@ llvm::Value *IRGenerator::visit(const ForLoop &loop) {
 llvm::Value *IRGenerator::visit(const Assign &assign) {
   llvm::Value * assignValue = assign.get_rhs().accept(*this);
   //test if assign type is void
-  if(assign.get_lhs().get_type() == t_void) {
+  /*
+  if(assign.get_rhs().get_type() == t_void) {
     return nullptr;
   }
+  */
   assign.get_lhs().accept(*this);
   llvm::Value * assignPtr = address_of(assign.get_lhs()); 
-  return Builder.CreateStore(assignPtr, assignValue);
+  Builder.CreateStore(assignPtr, assignValue);
+  return assignPtr;
 }
 
 } // namespace irgen

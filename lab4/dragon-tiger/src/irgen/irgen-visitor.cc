@@ -109,10 +109,9 @@ llvm::Value *IRGenerator::visit(const IfThenElse &ite) {
   llvm::BasicBlock *const end_block =
 	  llvm::BasicBlock::Create(Context, "if_end", current_function);
 
-  llvm::Value* cond = ite.get_condition().accept(*this);
-  Builder.CreateCondBr(
-		  Builder.CreateIsNotNull(cond),
-		  then_block, else_block);
+  llvm::Value * cond = 
+	  Builder.CreateIsNotNull(ite.get_condition().accept(*this));
+  Builder.CreateCondBr(cond, then_block, else_block);
 
   Builder.SetInsertPoint(then_block);
   llvm::Value *const then_result =

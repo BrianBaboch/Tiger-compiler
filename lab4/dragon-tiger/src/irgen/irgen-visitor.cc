@@ -192,7 +192,14 @@ llvm::Value *IRGenerator::visit(const ForLoop &loop) {
 }
 
 llvm::Value *IRGenerator::visit(const Assign &assign) {
-  UNIMPLEMENTED();
+  llvm::Value * varValue = assign.get_rhs().accept(*this);
+  //test if assign type is void
+  if(assign.get_type() == t_void) {
+    return nullptr;
+  }
+  llvm::Value * varPtr = address_of(assign.get_lhs()); 
+  return (Builder.CreateStore(varPtr, varValue));
+  
 }
 
 } // namespace irgen

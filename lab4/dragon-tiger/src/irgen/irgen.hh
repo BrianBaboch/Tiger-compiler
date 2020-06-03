@@ -88,7 +88,7 @@ public:
   void generate_frame();
 
   // Finds the right frame
-  std::pair<llvm:StructType *, llvm::Value *> frame_up(int levels);
+  //std::pair<llvm:StructType *, llvm::Value *> frame_up(int levels);
 
   // Generate the IR corresponding to those AST nodes.
   // Those methods will return either nullptr when no

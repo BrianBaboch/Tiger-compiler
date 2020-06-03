@@ -128,17 +128,4 @@ void IRGenerator::generate_frame() {
 		  "ft" + current_function_decl->get_external_name().get());
 
 }
-/*
-std::pair<llvm:StructType *, llvm::Value *> IRGenerator::frame_up(int levels) {
-  std::pair<llvm:StructType *, llvm::Value *> fun;
-  fun.first = llvm::StructType::create(Context, current_function_decl.get());
-  fun.second = ;
-  if(!levels) {
-
-  }
-  else {
-
-  }
-}
-*/
 } // namespace irgen

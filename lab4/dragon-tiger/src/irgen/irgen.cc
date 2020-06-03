@@ -79,6 +79,8 @@ void IRGenerator::generate_function(const FunDecl &decl) {
 
   Builder.SetInsertPoint(bb2);
 
+  generate_frame();
+
   // Set the name for each argument and register it in the allocations map
   // after storing it in an alloca.
   unsigned i = 0;
@@ -113,11 +115,17 @@ void IRGenerator::generate_frame() {
 	&current_function_decl->get_parent().get()]->getPointerTo());
   }
   for (auto escp_decl : current_function_decl->get_escaping_decls()) {
-    types.push_back(llvm_type(escp_decl->get_type()));
+    if(escp_decl->get_type() != t_void) {
+      types.push_back(llvm_type(escp_decl->get_type()));
+    }
   }
   llvm::StructType * myStruct = llvm::StructType::create(Context, "ft_" + 
 	  current_function_decl->get_external_name().get());
   frame_type[current_function_decl] = myStruct;
+
+  frame = Builder.CreateAlloca(myStruct, nullptr, 
+		  "ft" + current_function_decl->get_external_name().get());
+
 }
 
 } // namespace irgen

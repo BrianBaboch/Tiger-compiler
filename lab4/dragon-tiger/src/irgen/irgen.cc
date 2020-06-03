@@ -48,7 +48,10 @@ llvm::Value *IRGenerator::address_of(const Identifier &id) {
   assert(id.get_decl());
   const VarDecl &decl = dynamic_cast<const VarDecl &>(id.get_decl().get());
   if(decl.get_escapes()) {
-    return (frame_up(decl.get_depth() - id.get_depth()).second);
+    std::pair<llvm::StructType *, llvm::Value *> myFrame = 
+	    frame_up(id.get_depth() - decl.get_depth());
+    return (Builder.CreateStructGEP(myFrame.first, myFrame.second, 
+			    frame_position[&decl]));
   }
   else {
     return allocations[&decl];

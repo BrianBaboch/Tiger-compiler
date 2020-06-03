@@ -142,8 +142,7 @@ std::pair<llvm::StructType *, llvm::Value *> IRGenerator::frame_up(int levels) {
   llvm::Value * sl = frame;
   int current_level = levels;
   while(current_level > 0) {
-    sl = Builder.CreateStructGEP(*frame_type[fun]->element_begin()
-		    ,Builder.CreateLoad(sl),(levels-current_level));
+    sl = Builder.CreateLoad(Builder.CreateStructGEP(frame_type[fun], sl, 0)); 
     fun = &fun->get_parent().get();
     current_level = current_level - 1;
   }

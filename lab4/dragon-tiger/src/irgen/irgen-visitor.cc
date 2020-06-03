@@ -196,6 +196,7 @@ llvm::Value *IRGenerator::visit(const FunCall &call) {
   }
 
   std::vector<llvm::Value *> args_values;
+  args_values.push_back(frame_up(call.get_depth() - decl.get_depth()).second);
   for (auto expr : call.get_args()) {
     args_values.push_back(expr->accept(*this));
   }

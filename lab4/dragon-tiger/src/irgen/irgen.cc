@@ -47,7 +47,12 @@ void IRGenerator::print_ir(std::ostream *ostream) {
 llvm::Value *IRGenerator::address_of(const Identifier &id) {
   assert(id.get_decl());
   const VarDecl &decl = dynamic_cast<const VarDecl &>(id.get_decl().get());
-  return allocations[&decl];
+  if(decl.get_escapes()) {
+    return (frame_up(decl.get_depth() - id.get_depth()).second);
+  }
+  else {
+    return allocations[&decl];
+  }
 }
 
 void IRGenerator::generate_program(FunDecl *main) {

@@ -149,9 +149,10 @@ llvm::Value *IRGenerator::visit(const VarDecl &decl) {
     return nullptr;
   }
 
-  llvm::Type * varType = llvm_type(decl.get_type());
-  llvm::Value * varPtr = alloca_in_entry(varType, decl.name);
-  allocations[&decl] = varPtr;
+  //llvm::Type * varType = llvm_type(decl.get_type());
+  //llvm::Value * varPtr = alloca_in_entry(varType, decl.name);
+  //allocations[&decl] = varPtr;
+  llvm::Value * varPtr = generate_vardecl(decl);
 
   Builder.CreateStore(varValue , varPtr);
   return varPtr;

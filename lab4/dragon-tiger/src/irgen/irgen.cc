@@ -79,7 +79,7 @@ void IRGenerator::generate_function(const FunDecl &decl) {
 
   Builder.SetInsertPoint(bb2);
 
-  //generate_frame();
+  generate_frame();
 
 
   // Set the name for each argument and register it in the allocations map
@@ -143,5 +143,15 @@ std::pair<llvm::StructType *, llvm::Value *> IRGenerator::frame_up(int levels) {
   myPair.first = frame_type[fun];
   myPair.second = sl;
   return myPair;
+}
+
+llvm::Value *IRGenerator::generate_vardecl(const VarDecl &decl) {
+  llvm::Value * varValue = decl.get_expr()->accept(*this);
+  if(decl.get_escapes()) {
+
+  }
+  else {
+    
+  }
 }
 } // namespace irgen

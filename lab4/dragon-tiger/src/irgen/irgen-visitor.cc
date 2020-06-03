@@ -80,7 +80,7 @@ llvm::Value *IRGenerator::visit(const Sequence &seq) {
   for (auto expr : seq.get_exprs())
     result = expr->accept(*this);
   // An empty sequence should return () but the result
-  // will never be used anyway, so nullptr is fine.
+  // will never be used anyway so nullptr is fine.
   return result;
 }
 

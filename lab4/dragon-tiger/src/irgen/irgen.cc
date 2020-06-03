@@ -146,12 +146,26 @@ std::pair<llvm::StructType *, llvm::Value *> IRGenerator::frame_up(int levels) {
 }
 
 llvm::Value *IRGenerator::generate_vardecl(const VarDecl &decl) {
-  llvm::Value * varValue = decl.get_expr()->accept(*this);
   if(decl.get_escapes()) {
-
+    int index = 1;
+    for(size_t i = 0; i < (current_function_decl->get_escaping_decls()).size(); 
+		    i++) {
+      if(current_function_decl->get_escaping_decls()[i] == &decl) {
+        index = i + 1;
+	break;
+      }
+    }
+    frame_position[&decl] = index;
+    llvm::Value * adr = Builder.CreateStructGEP(
+		    frame_type[current_function_decl], frame, index);
+    allocations[&decl] = adr;
+    return adr;
   }
   else {
-    
+    llvm::Type * varType = llvm_type(decl.get_type());
+    llvm::Value * varPtr = alloca_in_entry(varType, decl.name);
+    allocations[&decl] = varPtr;
+    return varPtr;
   }
 }
 } // namespace irgen

@@ -114,18 +114,34 @@ void IRGenerator::generate_frame() {
   if(current_function_decl->get_parent()) {
     types.push_back(frame_type[
 	&current_function_decl->get_parent().get()]->getPointerTo());
-  }
-  for (auto escp_decl : current_function_decl->get_escaping_decls()) {
-    if(escp_decl->get_type() != t_void) {
-      types.push_back(llvm_type(escp_decl->get_type()));
+    for (auto escp_decl : current_function_decl->get_escaping_decls()) {
+      if(escp_decl->get_type() != t_void) {
+        types.push_back(llvm_type(escp_decl->get_type()));
+      }
     }
   }
   llvm::StructType * myStruct = llvm::StructType::create(Context, "ft_" + 
 	  current_function_decl->get_external_name().get());
+  myStruct->setBody(types);
   frame_type[current_function_decl] = myStruct;
 
   frame = Builder.CreateAlloca(myStruct, nullptr, 
 		  "ft" + current_function_decl->get_external_name().get());
+}
 
+std::pair<llvm::StructType *, llvm::Value *> IRGenerator::frame_up(int levels) {
+  const FunDecl * fun = current_function_decl;
+  llvm::Value * sl = frame;
+  int current_level = levels;
+  while(current_level > 0) {
+    sl = Builder.CreateStructGEP(*frame_type[fun]->element_begin()
+		    ,Builder.CreateLoad(sl),(levels-current_level));
+    fun = &fun->get_parent().get();
+    current_level = current_level - 1;
+  }
+  std::pair<llvm::StructType *, llvm::Value *> myPair;
+  myPair.first = frame_type[fun];
+  myPair.second = sl;
+  return myPair;
 }
 } // namespace irgen

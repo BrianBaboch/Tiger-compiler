@@ -84,6 +84,8 @@ public:
   // Print the generated IR.
   void print_ir(std::ostream *);
 
+  void generate_frame();
+
   // Generate the IR corresponding to those AST nodes.
   // Those methods will return either nullptr when no
   // result is expected (a statement for example),

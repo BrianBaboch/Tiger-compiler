@@ -79,7 +79,7 @@ void IRGenerator::generate_function(const FunDecl &decl) {
 
   Builder.SetInsertPoint(bb2);
 
-  generate_frame();
+  //generate_frame();
 
   // Set the name for each argument and register it in the allocations map
   // after storing it in an alloca.

@@ -154,16 +154,18 @@ std::pair<llvm::StructType *, llvm::Value *> IRGenerator::frame_up(int levels) {
 
 llvm::Value *IRGenerator::generate_vardecl(const VarDecl &decl) {
   if(decl.get_escapes()) {
-    int index = 1;
+    int index = 0;
     for(size_t i = 0; i < (current_function_decl->get_escaping_decls()).size(); 
 		    i++) {
-      if(current_function_decl->get_escaping_decls()[i] == &decl) {
-	break;
-      }
 
       if(current_function_decl->get_escaping_decls()[i]->get_type() != t_void) {
         index += 1;
       }
+
+      if(current_function_decl->get_escaping_decls()[i] == &decl) {
+	break;
+      }
+
     }
     frame_position[&decl] = index;
     llvm::Value * adr = Builder.CreateStructGEP(

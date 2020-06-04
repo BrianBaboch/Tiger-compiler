@@ -93,18 +93,23 @@ void IRGenerator::generate_function(const FunDecl &decl) {
   // Set the name for each argument and register it in the allocations map
   // after storing it in an alloca.
   unsigned i = 0;
-  if(!decl.is_external) {
-    llvm::Value * struc = Builder.CreateStructGEP(frame_type[&decl], frame, 0);
-    Builder.CreateStore(allocations[params[0]], struc);
-  }
+  bool entered = false;
+
   for (auto &arg : current_function->args()) {
     arg.setName(params[i]->name.get());
     //llvm::Value *const shadow = alloca_in_entry(llvm_type(params[i]->get_type()), params[i]->name.get());
 
-
-    llvm::Value *const shadow = generate_vardecl(*params[i]);
-    Builder.CreateStore(&arg, shadow);
-    i++;
+    if(!decl.is_external && i == 0 && !entered) {
+      llvm::Value * struc = Builder.CreateStructGEP(
+		      frame_type[&decl], frame, 0);
+      Builder.CreateStore(&arg, struc);
+      entered = true;
+    }
+    else {
+      llvm::Value *const shadow = generate_vardecl(*params[i]);
+      Builder.CreateStore(&arg, shadow);
+      i++;
+    }
   }
 
   // Visit the body

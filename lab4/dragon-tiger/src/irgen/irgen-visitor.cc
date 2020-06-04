@@ -142,19 +142,21 @@ llvm::Value *IRGenerator::visit(const IfThenElse &ite) {
 }
 
 llvm::Value *IRGenerator::visit(const VarDecl &decl) {
-  llvm::Value * varValue = decl.get_expr()->accept(*this);
-
   // test if the decl is of type void
-  if(decl.get_type() == t_void) {
+  if(decl.get_expr()->get_type() == t_void) {
     return nullptr;
   }
 
-  //llvm::Type * varType = llvm_type(decl.get_type());
-  //llvm::Value * varPtr = alloca_in_entry(varType, decl.name);
-  //allocations[&decl] = varPtr;
+  llvm::Value * varValue;
+  if(decl.get_expr()) {
+    varValue = decl.get_expr()->accept(*this);
+  }
+
   llvm::Value * varPtr = generate_vardecl(decl);
 
-  Builder.CreateStore(varValue , varPtr);
+  if(varValue) {
+    Builder.CreateStore(varValue , varPtr);
+  }
   return varPtr;
 }
 

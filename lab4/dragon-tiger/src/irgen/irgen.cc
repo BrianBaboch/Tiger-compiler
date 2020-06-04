@@ -167,6 +167,9 @@ std::pair<llvm::StructType *, llvm::Value *> IRGenerator::frame_up(int levels) {
 llvm::Value *IRGenerator::generate_vardecl(const VarDecl &decl) {
   if(decl.get_escapes()) {
     int index = 0;
+    if(current_function_decl->get_parent()) {
+      index += 1;
+    }
     for(size_t i = 0; i < (current_function_decl->get_escaping_decls()).size(); 
 		    i++) {
 

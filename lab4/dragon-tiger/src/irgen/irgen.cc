@@ -173,12 +173,12 @@ llvm::Value *IRGenerator::generate_vardecl(const VarDecl &decl) {
     for(size_t i = 0; i < (current_function_decl->get_escaping_decls()).size(); 
 		    i++) {
 
-      if(current_function_decl->get_escaping_decls()[i]->get_type() != t_void) {
-        index += 1;
-      }
-
       if(current_function_decl->get_escaping_decls()[i] == &decl) {
 	break;
+      }
+
+      if(current_function_decl->get_escaping_decls()[i]->get_type() != t_void) {
+        index += 1;
       }
 
     }

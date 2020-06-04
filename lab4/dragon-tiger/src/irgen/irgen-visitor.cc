@@ -166,7 +166,8 @@ llvm::Value *IRGenerator::visit(const FunDecl &decl) {
 
   if(!decl.is_external) {
     if(decl.get_parent()) {
-      param_types.push_back(frame_type[&decl.get_parent().get()]);
+      param_types.push_back(frame_type[&decl.get_parent().get()]
+		      ->getPointerTo());
     }
   }
   for (auto param_decl : decl.get_params()) {

@@ -142,15 +142,17 @@ llvm::Value *IRGenerator::visit(const IfThenElse &ite) {
 }
 
 llvm::Value *IRGenerator::visit(const VarDecl &decl) {
+  llvm::Value * varValue;
+
+  if(decl.get_expr()) {
+    varValue = decl.get_expr()->accept(*this);
+  }
+
   // test if the decl is of type void
   if(decl.get_expr()->get_type() == t_void) {
     return nullptr;
   }
 
-  llvm::Value * varValue;
-  if(decl.get_expr()) {
-    varValue = decl.get_expr()->accept(*this);
-  }
 
   llvm::Value * varPtr = generate_vardecl(decl);
 

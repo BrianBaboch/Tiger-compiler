@@ -242,6 +242,7 @@ void TypeChecker::visit(FunCall &call) {
       utils::error(call.loc, "Arguments type mismatch");
     }
   }
+
   call.set_type(call.get_decl()->get_type());
 }
 

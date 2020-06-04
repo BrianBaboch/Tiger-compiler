@@ -140,9 +140,8 @@ void IRGenerator::generate_frame() {
       }
     }
   }
-  llvm::StructType * myStruct = llvm::StructType::create(Context, "ft_" + 
+  llvm::StructType * myStruct = llvm::StructType::create(Context, types, "ft_" + 
 	  current_function_decl->get_external_name().get());
-  myStruct->setBody(types);
   frame_type[current_function_decl] = myStruct;
 
   frame = Builder.CreateAlloca(myStruct, nullptr, 

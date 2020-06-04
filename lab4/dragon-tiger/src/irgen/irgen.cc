@@ -47,7 +47,7 @@ void IRGenerator::print_ir(std::ostream *ostream) {
 llvm::Value *IRGenerator::address_of(const Identifier &id) {
   assert(id.get_decl());
   const VarDecl &decl = dynamic_cast<const VarDecl &>(id.get_decl().get());
-  if(id.get_depth() != decl.get_depth()) {
+  if(decl.get_escapes()) {
     std::pair<llvm::StructType *, llvm::Value *> myFrame = 
 	    frame_up(id.get_depth() - decl.get_depth());
     return (Builder.CreateStructGEP(myFrame.first, myFrame.second, 

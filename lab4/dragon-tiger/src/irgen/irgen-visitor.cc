@@ -153,7 +153,6 @@ llvm::Value *IRGenerator::visit(const VarDecl &decl) {
     return nullptr;
   }
 
-
   llvm::Value * varPtr = generate_vardecl(decl);
 
   if(varValue) {
@@ -167,8 +166,7 @@ llvm::Value *IRGenerator::visit(const FunDecl &decl) {
 
   if(!decl.is_external) {
     if(decl.get_parent()) {
-      param_types.push_back(frame_type[&decl.get_parent().get()]
-		      ->getPointerTo());
+      param_types.push_back(frame_type[&decl.get_parent().get()]);
     }
   }
   for (auto param_decl : decl.get_params()) {

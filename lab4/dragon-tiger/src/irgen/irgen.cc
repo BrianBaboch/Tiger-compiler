@@ -95,7 +95,7 @@ void IRGenerator::generate_function(const FunDecl &decl) {
   unsigned i = 0;
   if(!decl.is_external) {
     llvm::Value * struc = Builder.CreateStructGEP(frame_type[&decl], frame, 0);
-    Builder.CreateStore(allocations[params[0]], struc);
+    Builder.CreateStore(params[0]->accept(*this), struc);
   }
   for (auto &arg : current_function->args()) {
     arg.setName(params[i]->name.get());

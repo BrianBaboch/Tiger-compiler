@@ -96,7 +96,6 @@ void IRGenerator::generate_function(const FunDecl &decl) {
   bool entered = false;
 
   for (auto &arg : current_function->args()) {
-    arg.setName(params[i]->name.get());
     //llvm::Value *const shadow = alloca_in_entry(llvm_type(params[i]->get_type()), params[i]->name.get());
 
     if(!decl.is_external && i == 0 && !entered) {
@@ -106,6 +105,7 @@ void IRGenerator::generate_function(const FunDecl &decl) {
       entered = true;
     }
     else {
+      arg.setName(params[i]->name.get());
       llvm::Value *const shadow = generate_vardecl(*params[i]);
       Builder.CreateStore(&arg, shadow);
       i++;

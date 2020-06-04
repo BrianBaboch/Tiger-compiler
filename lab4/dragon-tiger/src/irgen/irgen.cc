@@ -135,12 +135,13 @@ void IRGenerator::generate_frame() {
   if(current_function_decl->get_parent()) {
     types.push_back(frame_type[
 	&current_function_decl->get_parent().get()]->getPointerTo());
-    for (auto escp_decl : current_function_decl->get_escaping_decls()) {
-      if(escp_decl->get_type() != t_void) {
-        types.push_back(llvm_type(escp_decl->get_type()));
-      }
+  }
+  for (auto escp_decl : current_function_decl->get_escaping_decls()) {
+    if(escp_decl->get_type() != t_void) {
+      types.push_back(llvm_type(escp_decl->get_type()));
     }
   }
+
   llvm::StructType * myStruct = llvm::StructType::create(Context, types, "ft_" + 
 	  current_function_decl->get_external_name().get());
   frame_type[current_function_decl] = myStruct;

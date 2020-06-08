@@ -89,6 +89,7 @@ public:
 
   // Allocate variables inside decl
   llvm::Value * generate_vardecl(const VarDecl &decl);
+
   // Finds the right frame
   std::pair<llvm::StructType *, llvm::Value *> frame_up(int levels);
 

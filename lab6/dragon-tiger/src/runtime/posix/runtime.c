@@ -19,9 +19,7 @@ void __print(const char *s) {
 }
 
 void __print_int(const int32_t i) {
-  if(!fprintf(stdout, "%d", i)){
-    exit(EXIT_FAILURE);
-  }
+  fprintf(stdout, "%d", i);
 }
 
 void __flush(void) {
@@ -31,15 +29,14 @@ void __flush(void) {
 const char *__getchar(void) {
   char str[2];
   // Get the first character with the terminating null character
-  if(fgets(str, 2, stdin) == NULL) {
+  if(!fgets(str, 2, stdin)) {
     char * myStr = malloc(sizeof(char));
     myStr[0] = '\0';
     return myStr;
   }
   else {
     char * myStr = malloc(2*sizeof(char));
-    myStr[0] = str[0];
-    myStr[1] = '\0';
+    *myStr = *str;
     return myStr;
   }
 }

@@ -37,7 +37,9 @@ const char *__getchar(void) {
   if(!fgets(str, 1, stdin)) {
     return "";
   }
-  char * myChar = &str[0];
+  char * myChar = (char *) malloc(sizeof(char));
+  *myChar = str[0];
+
   return myChar;
 }
 

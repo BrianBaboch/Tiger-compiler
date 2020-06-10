@@ -94,17 +94,27 @@ const char *__substring(const char *s, int32_t first, int32_t length) {
 
 const char *__concat(const char *s1, const char *s2) {
   char * myStr = (char *) malloc((strlen(s1) + strlen(s2))*sizeof(char));
-  for(int i = 0; i < strlen(s1) - 1; ++i) {
+  for(int i = 0; i < strlen(s1); ++i) {
     myStr[i] = s1[i];
   }
   for(int i = 0; i < strlen(s2); ++i) {
-    myStr[strlen(s1) - 1 + i] = s2[i];
+    myStr[strlen(s1) + i] = s2[i];
   }
   return myStr;
 }
 
 int32_t __strcmp(const char *s1, const char *s2) {
-  return strcmp(s1, s2);
+  if(!strcmp(s1, s2)) {
+    return 0;
+  }
+  else {
+    if(strcmp(s1, s2) < 0) {
+      return -1;
+    }
+    else {
+      return 1;
+    }
+  }
 }
 
 int32_t __streq(const char *s1, const char *s2) {

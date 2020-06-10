@@ -28,12 +28,13 @@ void __flush(void) {
 
 const char *__getchar(void) {
   char str[2];
-  // Get the first character with the terminating null character
+  // Return null character
   if(!fgets(str, 2, stdin)) {
     char * myStr = malloc(sizeof(char));
-    myStr[0] = '\0';
+    *myStr = '\0';
     return myStr;
   }
+  // Return the first character with the terminating null character
   else {
     char * myStr = malloc(2*sizeof(char));
     *myStr = *str;

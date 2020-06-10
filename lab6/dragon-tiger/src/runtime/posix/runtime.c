@@ -34,8 +34,7 @@ void __flush(void) {
 
 const char *__getchar(void) {
   char * myChar;
-  scanf("%c", myChar);
-  if(!myChar) {
+  if(!fgets(myChar, 1, stdin)) {
     return "";
   }
   return myChar;

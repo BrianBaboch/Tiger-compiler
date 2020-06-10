@@ -59,7 +59,7 @@ int32_t __ord(const char *s) {
 }
 
 const char *__chr(int32_t i) {
-  char * myStr = (char *) malloc(2*sizeof(char));
+  char * myStr = malloc(2*sizeof(char));
   if(i == 0) {
     myStr[0] = '\0';	  
   }
@@ -77,22 +77,25 @@ int32_t __size(const char *s) {
 }
 
 const char *__substring(const char *s, int32_t first, int32_t length) {
-  if(first < 0 || length <0) {
+  if(first < 0 || length <0 || length + first > strlen(s)) {
     exit(EXIT_FAILURE);
   }
+  /*
   if(strlen(s) < length + first) {
     exit(EXIT_FAILURE);
   }
+  */
   char * myStr = malloc((length+1)*sizeof(char));
   for(int i = 0; i < length; ++i) {
     myStr[i] = s[first + i];
   }
+
   myStr[length] = '\0';
   return myStr;
 }
 
 const char *__concat(const char *s1, const char *s2) {
-  char * myStr = (char *) malloc((strlen(s1) + strlen(s2))*sizeof(char));
+  char * myStr = malloc((strlen(s1) + strlen(s2))*sizeof(char));
   for(int i = 0; i < strlen(s1); ++i) {
     myStr[i] = s1[i];
   }

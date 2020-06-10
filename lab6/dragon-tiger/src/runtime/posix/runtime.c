@@ -33,7 +33,7 @@ void __flush(void) {
 }
 
 const char *__getchar(void) {
-  char str[50];
+  char * myChar;
   scanf("%c", myChar);
   if(!myChar) {
     return "";

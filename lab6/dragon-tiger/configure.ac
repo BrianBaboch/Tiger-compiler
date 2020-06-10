@@ -31,6 +31,7 @@ AC_CONFIG_FILES([Makefile
                  compile
                  src/Makefile
                  src/driver/Makefile
+		 src/irgen/Makefile
                  src/runtime/posix/Makefile
                  src/utils/Makefile
                 ])

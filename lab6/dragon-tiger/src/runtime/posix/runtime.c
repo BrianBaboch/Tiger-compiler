@@ -84,8 +84,8 @@ const char *__substring(const char *s, int32_t first, int32_t length) {
   }
   else {
     char * myStr = (char *) malloc((length+1)*sizeof(char));
-    for(int i = 0; i < length; ++i) {
-      myStr[i] = s[first + i];
+    for(int i = first; i < first + length; ++i) {
+      myStr[i - first] = s[i];
     }
     myStr[length] = '\0';
     return myStr;

@@ -34,7 +34,7 @@ void __flush(void) {
 
 const char *__getchar(void) {
   char str[5];
-  if(!fgets(str, 1, stdin)) {
+  if(!fgets(str, 2, stdin)) {
     return "";
   }
   char * myChar = (char *) malloc(sizeof(char));

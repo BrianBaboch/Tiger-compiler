@@ -33,10 +33,11 @@ void __flush(void) {
 }
 
 const char *__getchar(void) {
-  char * myChar;
-  if(!fgets(myChar, 1, stdin)) {
+  char str[5];
+  if(!fgets(str, 1, stdin)) {
     return "";
   }
+  char * myChar = &str[0];
   return myChar;
 }
 

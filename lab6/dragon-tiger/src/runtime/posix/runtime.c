@@ -35,7 +35,8 @@ void __flush(void) {
 const char *__getchar(void) {
   char str[2];
   // Get the first character with the terminating null character
-  if(!fgets(str, 2, stdin)) {
+  fgets(str, 2, stdin);
+  if(str[0] == EOF) {
     char * myStr = (char *) malloc(sizeof(char));
     *myStr = '\0';
     return myStr;
@@ -48,7 +49,12 @@ const char *__getchar(void) {
 }
 
 int32_t __ord(const char *s) {
-  error("UNIMPLEMENTED __ord");
+  if(!s) {
+    return -1;
+  }
+  else {
+    return (int32_t)s[0];
+  }
 }
 
 const char *__chr(int32_t i) {

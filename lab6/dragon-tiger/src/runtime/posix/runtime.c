@@ -97,6 +97,7 @@ const char *__concat(const char *s1, const char *s2) {
   for(int i = 0; i < strlen(s1); i++) {
     myStr[i] = s1[i];
   }
+
   for(int i = 0; i < strlen(s2); i++) {
     myStr[strlen(s1) + i] = s2[i];
   }

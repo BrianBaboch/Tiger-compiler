@@ -35,7 +35,7 @@ void __flush(void) {
 const char *__getchar(void) {
   char str[2];
   // Get the first character with the terminating null character
-  if(!fgets(str, 2, stdin)) {
+  if(!fgets(str, 1, stdin)) {
     char * myStr = (char *) malloc(sizeof(char));
     myStr[0] = '\0';
     return myStr;
@@ -79,17 +79,15 @@ const char *__substring(const char *s, int32_t first, int32_t length) {
   if(first < 0 || length <0 || strlen(s) < length + first) {
     exit(EXIT_FAILURE);
   }
-  else if(strlen(s) < length + first) {
+  if(strlen(s) < length + first) {
     exit(EXIT_FAILURE);
   }
-  else {
-    char * myStr = (char *) malloc((length+1)*sizeof(char));
-    for(int i = 0; i < length; ++i) {
-      myStr[i] = s[first + i];
-    }
-    myStr[length] = '\0';
-    return myStr;
+  char * myStr = (char *) malloc((length+1)*sizeof(char));
+  for(int i = 0; i < length; ++i) {
+    myStr[i] = s[first + i];
   }
+  myStr[length] = '\0';
+  return myStr;
 }
 
 const char *__concat(const char *s1, const char *s2) {

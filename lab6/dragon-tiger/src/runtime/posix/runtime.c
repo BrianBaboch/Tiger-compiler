@@ -76,16 +76,16 @@ int32_t __size(const char *s) {
 }
 
 const char *__substring(const char *s, int32_t first, int32_t length) {
-  if(first < 0 || length <0) {
+  if(first < 0 || length <0 || strlen(s) < length + first) {
     exit(EXIT_FAILURE);
   }
-  if(strlen(s) < length + first) {
+  else if(strlen(s) < length + first) {
     exit(EXIT_FAILURE);
   }
   else {
     char * myStr = (char *) malloc((length+1)*sizeof(char));
-    for(int i = first; i < first + length; ++i) {
-      myStr[i - first] = s[i];
+    for(int i = 0; i < length; ++i) {
+      myStr[i] = s[first + i];
     }
     myStr[length] = '\0';
     return myStr;

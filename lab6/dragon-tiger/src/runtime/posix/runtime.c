@@ -11,18 +11,19 @@ static void error(const char *msg) {
 }
 
 void __print_err(const char *s) {
-  fprintf(stderr, "%s", s);
-  exit(EXIT_FAILURE);
+  if(!fprintf(stderr, "%s", s)) {
+    exit(EXIT_FAILURE);
+  }
 }
 
 void __print(const char *s) {
-  if(!fprintf(stdout, "%s\n", s)){
+  if(!fprintf(stdout, "%s", s)){
     exit(EXIT_FAILURE);
   }
 }
 
 void __print_int(const int32_t i) {
-  if(!fprintf(stdout, "%d\n", i)){
+  if(!fprintf(stdout, "%d", i)){
     exit(EXIT_FAILURE);
   }
 }
@@ -32,7 +33,7 @@ void __flush(void) {
 }
 
 const char *__getchar(void) {
-  char * myChar;
+  char str[50];
   scanf("%c", myChar);
   if(!myChar) {
     return "";

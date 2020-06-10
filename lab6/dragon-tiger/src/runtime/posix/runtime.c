@@ -79,7 +79,7 @@ const char *__substring(const char *s, int32_t first, int32_t length) {
   if(first < 0 || length <0) {
     exit(EXIT_FAILURE);
   }
-  if(strlen(s) <= length + first) {
+  if(strlen(s) < length + first) {
     exit(EXIT_FAILURE);
   }
   else {

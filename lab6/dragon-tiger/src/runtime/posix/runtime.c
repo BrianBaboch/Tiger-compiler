@@ -11,19 +11,24 @@ static void error(const char *msg) {
 }
 
 void __print_err(const char *s) {
-  error("UNIMPLEMENTED __print_err");
+  fprintf(stderr, "%s", s);
+  exit(EXIT_FAILURE);
 }
 
 void __print(const char *s) {
-  error("UNIMPLEMENTED __print");
+  if(!fprintf(stdout, "%s\n", s)){
+    exit(EXIT_FAILURE);
+  }
 }
 
 void __print_int(const int32_t i) {
-  error("UNIMPLEMENTED __print_int");
+  if(!fprintf(stdout, "%d\n", i)){
+    exit(EXIT_FAILURE);
+  }
 }
 
 void __flush(void) {
-  error("UNIMPLEMENTED __flush");
+  fflush(stdout);
 }
 
 const char *__getchar(void) {

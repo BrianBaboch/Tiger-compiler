@@ -35,10 +35,9 @@ void __flush(void) {
 const char *__getchar(void) {
   char str[2];
   // Get the first character with the terminating null character
-  fgets(str, 2, stdin);
-  if(str[0] == EOF) {
+  if(fgets(str, 2, stdin)) {
     char * myStr = (char *) malloc(sizeof(char));
-    *myStr = '\0';
+    myStr[0] = '\0';
     return myStr;
   }
   else {

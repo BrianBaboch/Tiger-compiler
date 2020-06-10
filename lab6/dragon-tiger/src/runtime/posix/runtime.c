@@ -34,15 +34,17 @@ void __flush(void) {
 
 const char *__getchar(void) {
   char str[2];
-  char * myStr = (char *) malloc(2*sizeof(char));
   // Get the first character with the terminating null character
   if(!fgets(str, 2, stdin)) {
+    char * myStr = (char *) malloc(sizeof(char));
     myStr[0] = '\0';
+    return myStr;
   }
   else {
-    *myStr = *str;
+    char * myStr = (char *) malloc(2*sizeof(char));
+    *myStr = str[0];
+    return myStr;
   }
-  return myStr;
 }
 
 int32_t __ord(const char *s) {
@@ -50,7 +52,7 @@ int32_t __ord(const char *s) {
     return -1;
   }
   else {
-    return (unsigned int)s[0];
+    return (unsigned char)s[0];
   }
 }
 
@@ -69,7 +71,7 @@ const char *__chr(int32_t i) {
 }
 
 int32_t __size(const char *s) {
-  error("UNIMPLEMENTED __size");
+  return strlen(s);
 }
 
 const char *__substring(const char *s, int32_t first, int32_t length) {

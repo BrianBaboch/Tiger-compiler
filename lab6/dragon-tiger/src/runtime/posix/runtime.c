@@ -93,7 +93,14 @@ const char *__substring(const char *s, int32_t first, int32_t length) {
 }
 
 const char *__concat(const char *s1, const char *s2) {
-  error("UNIMPLEMENTED __concat");
+  char * myStr = (char *) malloc((strlen(s1) + strlen(s2) - 1)*sizeof(char));
+  for(int i = 0; i < strlen(s1) - 1; ++i) {
+    myStr[i] = s1[i];
+  }
+  for(int i = 0; i < strlen(s2); ++i) {
+    myStr[strlen(s1) - 2 + i] = s2[i];
+  }
+  return myStr;
 }
 
 int32_t __strcmp(const char *s1, const char *s2) {

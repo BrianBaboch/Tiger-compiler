@@ -32,7 +32,12 @@ void __flush(void) {
 }
 
 const char *__getchar(void) {
-  error("UNIMPLEMENTED __getchar");
+  char * myChar;
+  scanf("%c", myChar);
+  if(!myChar) {
+    return "";
+  }
+  return myChar;
 }
 
 int32_t __ord(const char *s) {

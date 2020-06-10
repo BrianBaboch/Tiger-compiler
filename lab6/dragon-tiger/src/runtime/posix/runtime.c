@@ -35,8 +35,9 @@ void __flush(void) {
 const char *__getchar(void) {
   char str[2];
   // Get the first character with the terminating null character
-  if(!fgets(str, 2, stdin)) {
+  if(fgets(str, 2, stdin)i == NULL) {
     char * myStr = malloc(sizeof(char));
+    myStr[0] = '\0';
     return myStr;
   }
   else {
@@ -87,7 +88,6 @@ const char *__substring(const char *s, int32_t first, int32_t length) {
     myStr[i] = s[first + i];
   }
 
-  myStr[length] = '\0';
   return myStr;
 }
 

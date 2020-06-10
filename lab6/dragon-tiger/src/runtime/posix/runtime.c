@@ -36,12 +36,15 @@ const char *__getchar(void) {
   char str[2];
   // Get the first character with the terminating null character
   if(!fgets(str, 2, stdin)) {
-    return '\0';
+    char * myStr = (char *) malloc(sizeof(char));
+    *myStr = '\0';
+    return myStr;
   }
-  char * myChar = (char *) malloc(sizeof(char));
-  *myChar = str[0];
-
-  return myChar;
+  else {
+    char * myStr = (char *) malloc(2*sizeof(char));
+    *myStr = *str;
+    return myStr;
+  }
 }
 
 int32_t __ord(const char *s) {

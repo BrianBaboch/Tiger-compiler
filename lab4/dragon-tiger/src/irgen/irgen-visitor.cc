@@ -149,15 +149,13 @@ llvm::Value *IRGenerator::visit(const VarDecl &decl) {
   }
 
   // test if the decl is of type void
-  if(decl.get_expr()->get_type() == t_void) {
+  if(decl.get_expr()->get_type() == t_void || !varValue) {
     return nullptr;
   }
 
   llvm::Value * varPtr = generate_vardecl(decl);
 
-  if(varValue) {
-    Builder.CreateStore(varValue , varPtr);
-  }
+  Builder.CreateStore(varValue , varPtr);
   return varPtr;
 }
 
